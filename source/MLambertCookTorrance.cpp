@@ -63,7 +63,6 @@ RGBColor MLambertCookTorrance::Shade(
 	// VIEWDIRECTION:
 	FVector3 toView = camPos - pixelInfo.GetWorldSpacePoint();
 	Elite::Normalize(toView);
-	toView = -toView;
 
 	// ROUGHNESS:
 	float roughness{m_DefaultRoughness};
@@ -74,9 +73,9 @@ RGBColor MLambertCookTorrance::Shade(
 	if (m_pRoughness) m_pRoughness->Sample(pixelInfo.GetUV(), metalness);
 
 	// DIFFUSE:
-	RGBColor diffuse{m_DefaultColor};
+	RGBColor albedo{m_DefaultColor};
 	float out_Alpha{};
-	if (m_pDiffusemap) m_pDiffusemap->Sample(pixelInfo.GetUV(), diffuse, out_Alpha);
+	if (m_pDiffusemap) m_pDiffusemap->Sample(pixelInfo.GetUV(), albedo, out_Alpha);
 
 	RGBColor cookTorranceReflect{};
 
@@ -84,19 +83,21 @@ RGBColor MLambertCookTorrance::Shade(
 	{
 		if (!pLight->IsOn()) continue;
 
-		float dot{ Elite::Dot(-normal, pLight->GetDirection(pixelInfo)) };
+		float dot{ Elite::Dot(normal, -pLight->GetDirection(pixelInfo)) };
 
 		if (dot < 0.f) continue;
 
-		Elite::FVector3 halfVector{ toView + pLight->GetDirection(pixelInfo) };
+		Elite::FVector3 halfVector{ -pLight->GetDirection(pixelInfo) + toView};
+		Elite::Normalize(halfVector);
 		
-		RGBColor dFactor = RGBColor{ 1.f, 1.f, 1.f } - BRDF::FF::Schlick(halfVector, toView, diffuse, bool(metalness));
+		RGBColor dFactor = RGBColor{ 1.f, 1.f, 1.f } - BRDF::Fresnel::Schlick(halfVector, toView, albedo, bool(metalness));
 		RGBColor rFactor = RGBColor{ 1.f, 1.f, 1.f } - dFactor;
-		if (bool(metalness)) dFactor = RGBColor{ 0.f, 0.f, 0.f };
 
-		cookTorranceReflect = BRDF::CookTorrance(diffuse, toView, pLight->GetDirection(pixelInfo), normal, roughness, bool(metalness));
+		if (bool(metalness)) dFactor = RGBColor{ 0.f, 0.f, 0.f }; // Metals don't refract light!
 
-		finalColor += BRDF::Lambert(dFactor.r, diffuse) + cookTorranceReflect 
+		cookTorranceReflect = BRDF::CookTorrance(albedo, toView, -pLight->GetDirection(pixelInfo), normal, roughness, bool(metalness));
+
+		finalColor += BRDF::Lambert(dFactor.r, albedo) + cookTorranceReflect 
 			* pLight->BiradianceValue(pixelInfo)
 			* dot;
 	}

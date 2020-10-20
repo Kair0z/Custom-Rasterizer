@@ -11,4 +11,5 @@ namespace PremadeScenes
 	Scene* PBRBoxes();
 	Scene* Plane();
 	Scene* Vehicle();
+	Scene* Tie();
 }

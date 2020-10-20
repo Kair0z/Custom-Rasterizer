@@ -36,11 +36,12 @@ Scene* PremadeScenes::DefaultEmptyScene()
 		Frustrum{0.1f, 200.f}
 	};
 
-	LDirection* pSunLight = new LDirection{ FVector3{.577f, -.577f, -.577f}, RGBColor{1.f, 1.f, 1.f}, 2.f, false};
+	LDirection* pSunLight = new LDirection{ FVector3{.577f, -.577f, -.577f}, RGBColor{1.f, 1.f, 1.f}, 2.f, true};
 	LDirection* pFrontLight = new LDirection{ FVector3{0.f, 0.f, -1.f}, RGBColor{1.f, 1.f, 1.f}, 1.f, false };
 
-	LPoint* pLight0 = new LPoint{ FPoint3{0.f, 0.f, 30.f}, RGBColor{1.f, 1.f, 1.f}, 200.f, true };
-	LPoint* pLight1 = new LPoint{ FPoint3{10.f, 0.f, 20.f}, RGBColor{1.f, 1.f, 1.f}, 500.f, true };
+	LPoint* pLight0 = new LPoint{ FPoint3{0.f, 0.f, 20.f}, RGBColor{1.f, 1.f, 1.f}, 1000.f, true };
+	LPoint* pLight1 = new LPoint{ FPoint3{10.f, 0.f, 20.f}, RGBColor{1.f, 1.f, 1.f}, 500.f, false };
+
 	LPoint* pLight2 = new LPoint{ FPoint3{30.f, 0.f, 0.f}, RGBColor{1.f, 1.f, 1.f}, 500.f, false };
 	LPoint* pLight3 = new LPoint{ FPoint3{-30.f, 0.f, 0.f}, RGBColor{1.f, 1.f, 1.f}, 500.f, false };
 
@@ -62,6 +63,13 @@ Scene* PremadeScenes::Box()
 
 	TriMesh* pMesh = new TriMesh{ "boxTest", {}, 10.f, true, 1.f, true };
 
+	// Lambert + Phong
+	pMesh->AddMaterial(new MLambertPhong{
+		new ValueMap{"Resources/vehicle_specular.png"},
+		new ValueMap{"Resources/vehicle_gloss.png"},
+		new NormalMap{"Resources/vehicle_normal.png"},
+		new Texture{"Resources/vehicle_diffuse.png" } });
+
 	// Lambert + CookTorrance
 	pMesh->AddMaterial(new MLambertCookTorrance{ RGBColor{1.f, 0.782f, 0.344f}, 0.2f, true });
 
@@ -70,13 +78,6 @@ Scene* PremadeScenes::Box()
 	pLambert->OverwriteDiffuseMap(nullptr);
 	pLambert->SetDefaultColor(0.5f, 0.5f, 0.5f);
 	pMesh->AddMaterial(pLambert);
-
-	// Lambert + Phong
-	pMesh->AddMaterial(new MLambertPhong{
-		new ValueMap{"Resources/vehicle_specular.png"},
-		new ValueMap{"Resources/vehicle_gloss.png"},
-		new NormalMap{"Resources/vehicle_normal.png"},
-		new Texture{"Resources/vehicle_diffuse.png" } });
 
 	// Rawcolor
 	pMesh->AddMaterial(new MRawColor{ 1.f, 0.f, 0.f });
@@ -96,21 +97,24 @@ Scene* PremadeScenes::Vehicle()
 
 	TriMesh* pMesh = new TriMesh{ "vehicle", {}, 10.f, true, 1.f, true };
 
-	// Lambert
-	MLambertDiffuse* pLambert = new MLambertDiffuse{ new Texture{"Resources/vehicle_diffuse.png"}, new NormalMap{ "Resources/vehicle_normal.png" } };
-	pLambert->OverwriteDiffuseMap(nullptr);
-	pLambert->SetDefaultColor(0.5f, 0.5f, 0.5f);
-	pMesh->AddMaterial(pLambert);
-
 	// Lambert + CookTorrance
-	pMesh->AddMaterial(new MLambertCookTorrance{ RGBColor{1.f, 0.782f, 0.344f}, 0.5f , false });
+	MLambertCookTorrance* pLambertCookTorr = new MLambertCookTorrance{ RGBColor{1.f, 0.782f, 0.344f}, 0.4f , true };
+	pLambertCookTorr->OverwriteNormalMap(new NormalMap{ "Resources/vehicle_normal.png" });
+	pMesh->AddMaterial(pLambertCookTorr);
+	
 
-	// Lambert + Phong
+	// Lambert + Phong																				 
 	pMesh->AddMaterial(new MLambertPhong{
 		new ValueMap{"Resources/vehicle_specular.png"},
 		new ValueMap{"Resources/vehicle_gloss.png"},
 		new NormalMap{"Resources/vehicle_normal.png"},
 		new Texture{"Resources/vehicle_diffuse.png" } });
+
+	// Lambert
+	MLambertDiffuse* pLambert = new MLambertDiffuse{ new Texture{"Resources/vehicle_diffuse.png"}, new NormalMap{ "Resources/vehicle_normal.png" } };
+	pLambert->OverwriteDiffuseMap(nullptr);
+	pLambert->SetDefaultColor(0.5f, 0.5f, 0.5f);
+	pMesh->AddMaterial(pLambert);
 
 	// Rawcolor
 	pMesh->AddMaterial(new MRawColor{ 1.f, 0.f, 0.f });
@@ -125,6 +129,17 @@ Scene* PremadeScenes::Vehicle()
 	finalScene->AddMesh(pMesh);
 
 	return finalScene;
+}
+
+Scene* PremadeScenes::Tie()
+{
+	Scene* pFinal = DefaultEmptyScene();
+
+	TriMesh* pMesh = new TriMesh{ "tie", {}, 10.0f, true, 1.0f, true };
+	pMesh->AddMaterial(new MLambertDiffuse{ new Texture{"Resources/TIE_IN/TIE_IN_Diff.png"}, nullptr });
+
+	pFinal->AddMesh(pMesh);
+	return pFinal;
 }
 
 Scene* PremadeScenes::PBRBoxes()

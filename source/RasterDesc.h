@@ -31,3 +31,10 @@ struct RasterDesc
 	Backgroundtype m_BGType;
 	Cullmode m_Cullmode;
 };
+
+struct PixelShadeDesc
+{
+	Viewtype m_Viewtype;
+	Backgroundtype m_BGType;
+	Cullmode m_Cullmode;
+};

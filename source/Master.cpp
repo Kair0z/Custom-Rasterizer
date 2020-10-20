@@ -59,7 +59,8 @@ void Master::Cleanup()
 // Setup scenes to render:
 void Master::InitScenes()
 {
-	m_pSceneGraph->AddScene(PremadeScenes::Vehicle());
+	//m_pSceneGraph->AddScene(PremadeScenes::Vehicle());
+	m_pSceneGraph->AddScene(PremadeScenes::Tie());
 	m_pSceneGraph->AddScene(PremadeScenes::Box());
 }
 
@@ -67,7 +68,6 @@ void Master::InitScenes()
 void Master::InitUISheets()
 {
 	m_pUI->AddSheet(PremadeSheets::ButtonSheet(this));
-	//m_pUI->AddSheet(PremadeSheets::SliderSheet(this));
 }
 
 // Loop:

@@ -16,7 +16,7 @@ namespace BRDF
 	}
 
 	// Fresnel-functions
-	namespace FF
+	namespace Fresnel
 	{
 		RGBColor Schlick(const FVector3& halfVector, const FVector3& toView, const RGBColor& albedo, bool isMetal);
 	}

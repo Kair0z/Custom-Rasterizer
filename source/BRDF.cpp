@@ -9,10 +9,12 @@ Elite::RGBColor BRDF::Lambert(float diffuseReflectance, const Elite::RGBColor& d
 Elite::RGBColor BRDF::Phong(float specularReflectance, float phongExp, const Elite::FVector3& fromLight, const Elite::FVector3& toView, const Elite::FVector3& hitNormal)
 {
 	// normal must be normalized here!
-	Elite::FVector3 reflectVector{ fromLight + 2 * Elite::Dot(-hitNormal, fromLight) * hitNormal };
+	Elite::FVector3 reflectVector{ -fromLight - 2 * Elite::Dot(hitNormal, -fromLight) * hitNormal };
 
 	Elite::RGBColor result{ specularReflectance, specularReflectance, specularReflectance };
-	float multiplier = powf(Elite::Dot(reflectVector, toView), phongExp);
+
+	float dot = Elite::Dot(-reflectVector, toView);
+	float multiplier = powf(dot, phongExp);
 	result *= multiplier;
 
 	return result;
@@ -34,7 +36,7 @@ Elite::RGBColor BRDF::CookTorrance(const RGBColor& albedo, const Elite::FVector3
 
 	float normalDistribution{NDF::TrowbridgeReitz(hitNormal, halfVector, powf(roughness, 2.f))};
 
-	Elite::RGBColor fresnel{FF::Schlick(halfVector, toView, albedo, isMetal)};
+	Elite::RGBColor fresnel{Fresnel::Schlick(halfVector, toView, albedo, isMetal)};
 
 	float geometry{GF::Schlick(hitNormal, toView, remappedRoughness) * GF::Schlick(hitNormal, fromLight, remappedRoughness)};
 
@@ -63,7 +65,7 @@ float BRDF::NDF::TrowbridgeReitz(const FVector3& hitNormal, const FVector3& half
 
 #pragma region fresnel
 
-RGBColor BRDF::FF::Schlick(const FVector3& halfVector, const FVector3& toView, const RGBColor& albedo, bool isMetal)
+RGBColor BRDF::Fresnel::Schlick(const FVector3& halfVector, const FVector3& toView, const RGBColor& albedo, bool isMetal)
 {
 	RGBColor result{};
 	RGBColor F0{ albedo };

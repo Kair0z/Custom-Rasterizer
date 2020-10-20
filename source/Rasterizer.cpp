@@ -68,12 +68,7 @@ void Rasterizer::Render(const std::unique_ptr<Scenegraph>& pScenegraph, const st
 		pMesh->Rasterize(m_Window, m_RasterDesc, m_Depthbuffer, camPos, pScenegraph->GetActiveScene()->GetLights());
 	}
 
-	if (pUI->IsEmpty())
-	{
-		m_Window.Blit();
-		return;
-	}
-
+	// For every ui element:
 	for (UIElement* pUIElement : pUI->GetActiveSheet()->GetElements())
 	{
 		if (!pUIElement->ShouldRender()) continue;
