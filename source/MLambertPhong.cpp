@@ -77,7 +77,8 @@ RGBColor MLambertPhong::Shade(
 		RGBColor sumBRDF{ BRDF::Lambert(1.0f - specRefl, baseColor) + BRDF::Phong(specRefl, 60.0f, pLight->GetDirection(pixelInfo), toView, normal) };
 
 		RGBColor biradValue = pLight->BiradianceValue(pixelInfo);
-		float dot = Elite::Dot(-normal, pLight->GetDirection(pixelInfo));
+		float dot = Elite::Dot(normal, -pLight->GetDirection(pixelInfo));
+		if (dot < 0.0f) continue;
 
 		finalColor += sumBRDF
 			* biradValue

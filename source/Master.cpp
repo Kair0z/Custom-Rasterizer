@@ -59,7 +59,6 @@ void Master::Cleanup()
 // Setup scenes to render:
 void Master::InitScenes()
 {
-	m_pSceneGraph->AddScene(PremadeScenes::Plane());
 	m_pSceneGraph->AddScene(PremadeScenes::Tie());
 	m_pSceneGraph->AddScene(PremadeScenes::Vehicle());
 	m_pSceneGraph->AddScene(PremadeScenes::PBRBoxes());

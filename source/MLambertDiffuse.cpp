@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MLambertDiffuse.h"
+#include "BRDF.h"
 
 MLambertDiffuse::MLambertDiffuse(
 	Texture* pDiffusemap,
@@ -43,12 +44,9 @@ RGBColor MLambertDiffuse::Shade(
 
 		float dot = Elite::Dot(-normal, pLight->GetDirection(pixelInfo));
 
-		if (dot < 0.f)
-		{
-			continue;
-		}
+		if (dot < 0.f) continue;
 
-		finalColor += diffuse * pLight->BiradianceValue(pixelInfo) * dot;
+		finalColor += BRDF::Lambert(1.0f, diffuse) * pLight->BiradianceValue(pixelInfo) * dot;
 	}
 
 	return finalColor;

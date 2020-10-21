@@ -36,8 +36,8 @@ Scene* PremadeScenes::DefaultEmptyScene()
 		Frustrum{10.0f, 500.f}
 	};
 
-	LDirection* pSunLight = new LDirection{ FVector3{.577f, -.577f, -.577f}, RGBColor{1.f, 1.f, 1.f}, 15.f, true};
-	LDirection* pFrontLight = new LDirection{ FVector3{0.f, 0.f, -1.f}, RGBColor{1.f, 1.f, 1.f}, 1.f, false };
+	LDirection* pSunLight = new LDirection{ FVector3{.577f, -.577f, -.577f}, RGBColor{1.f, 1.f, 1.f}, 2.f, true};
+	LDirection* pFrontLight = new LDirection{ FVector3{0.f, 0.f, -1.f}, RGBColor{1.f, 1.f, 1.f}, 0.5f, true };
 
 	LPoint* pLight0 = new LPoint{ FPoint3{0.f, 0.f, 20.f}, RGBColor{1.f, 1.f, 1.f}, 1000.f, true };
 	LPoint* pLight1 = new LPoint{ FPoint3{10.f, 0.f, 20.f}, RGBColor{1.f, 1.f, 1.f}, 500.f, false };
@@ -137,25 +137,23 @@ Scene* PremadeScenes::Tie()
 
 	TriMesh* pMesh = new TriMesh{ "tie", {}, 10.0f, true, 1.0f, true };
 
-	// Lambert + CookTorrance
-	MLambertCookTorrance* pLambertCookTorr = new MLambertCookTorrance{ RGBColor{1.f, 0.782f, 0.344f}, 0.4f , true };
-	pLambertCookTorr->OverwriteNormalMap(new NormalMap{ "Resources/TIE_IN/TIE_IN_Normal.png" });
-	pMesh->AddMaterial(pLambertCookTorr);
-
 	// Lambert + Phong
 	MLambertPhong* pLamPhong = new MLambertPhong{
 		nullptr,
 		nullptr,
 		new NormalMap{ "Resources/TIE_IN/TIE_IN_Normal.png" },
 		new Texture{"Resources/TIE_IN/TIE_IN_Diff.png"} };
-	
+
 	pMesh->AddMaterial(pLamPhong);
+
+	// Lambert + CookTorrance
+	MLambertCookTorrance* pLambertCookTorr = new MLambertCookTorrance{ RGBColor{1.f, 0.782f, 0.344f}, 0.4f , true };
+	pLambertCookTorr->OverwriteNormalMap(new NormalMap{ "Resources/TIE_IN/TIE_IN_Normal.png" });
+	pMesh->AddMaterial(pLambertCookTorr);
 	
 
 	pMesh->AddMaterial(new MLambertDiffuse{ new Texture{"Resources/TIE_IN/TIE_IN_Diff.png"}, nullptr });
 
-	LPoint* pLight0 = new LPoint{ FPoint3{0.f, 10.f, 100.f}, RGBColor{1.f, 1.f, 1.f}, 3000.f, true };
-	pFinal->AddLight(pLight0);
 	pFinal->AddMesh(pMesh);
 	return pFinal;
 }
