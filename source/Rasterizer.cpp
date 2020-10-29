@@ -44,7 +44,9 @@ void Rasterizer::Cleanup()
 
 void Rasterizer::Render(const std::unique_ptr<Scenegraph>& pScenegraph, const std::unique_ptr<UI>& pUI)
 {
+	// Lock the backbuffer
 	m_Window.LockBB();
+	// ClearScreen:
 	Clear();
 
 	if (pScenegraph->IsEmpty())
@@ -64,7 +66,6 @@ void Rasterizer::Render(const std::unique_ptr<Scenegraph>& pScenegraph, const st
 	for (TriMesh* pMesh : pScenegraph->GetActiveScene()->GetMeshes())
 	{
 		pMesh->Project(m_Window.GetWindowDimensions(), viewMatrix, projMatrix);
-
 		pMesh->Rasterize(m_Window, m_RasterDesc, m_Depthbuffer, camPos, pScenegraph->GetActiveScene()->GetLights());
 	}
 
@@ -96,6 +97,7 @@ void Rasterizer::Clear()
 	
 	m_Depthbuffer.Reset();
 }
+
 
 void Rasterizer::Update(float elapsedSec)
 {

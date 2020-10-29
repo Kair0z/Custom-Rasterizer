@@ -17,7 +17,7 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Rasterizer.cpp">
-      <Filter>Renderers</Filter>
+      <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Scenes</Filter>
@@ -169,7 +169,7 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Rasterizer.h">
-      <Filter>Renderers</Filter>
+      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Scenes</Filter>
@@ -187,7 +187,7 @@
       <Filter>Mesh</Filter>
     </ClInclude>
     <ClInclude Include="RasterDesc.h">
-      <Filter>Renderers</Filter>
+      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Window</Filter>
@@ -282,9 +282,6 @@
     <Filter Include="MathFiles">
       <UniqueIdentifier>{a164a9e4-fd0b-413a-a8fe-b9d096668b91}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderers">
-      <UniqueIdentifier>{8f3cda8c-05eb-4121-bcf3-02955650a16b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Lights">
       <UniqueIdentifier>{27a20ef6-9239-462c-bde6-020c3d3aa580}</UniqueIdentifier>
     </Filter>
@@ -308,6 +305,9 @@
     </Filter>
     <Filter Include="Premades">
       <UniqueIdentifier>{d10d430f-e437-49cc-91ac-faa963f5fb9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{8f3cda8c-05eb-4121-bcf3-02955650a16b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
